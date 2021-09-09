@@ -1,4 +1,5 @@
 // constants
+import Web3EthContract from "web3-eth-contract";
 import Web3 from "web3";
 import SmartContract from "../../contracts/NCC.json";
 // log
@@ -37,6 +38,7 @@ export const connect = () => {
     const { ethereum } = window;
     const metamaskIsInstalled = ethereum && ethereum.isMetaMask;
     if (metamaskIsInstalled) {
+      Web3EthContract.setProvider(ethereum);
       let web3 = new Web3(ethereum);
       try {
         const accounts = await ethereum.request({
@@ -47,7 +49,7 @@ export const connect = () => {
         });
         // const NetworkData = await SmartContract.networks[networkId];
         if (networkId == 137) {
-          const SmartContractObj = new web3.eth.Contract(
+          const SmartContractObj = new Web3EthContract(
             SmartContract,
             "0x827acb09a2dc20e39c9aad7f7190d9bc53534192"
           );

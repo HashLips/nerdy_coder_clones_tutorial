@@ -5,35 +5,20 @@ import { fetchData } from "./redux/data/dataActions";
 import * as s from "./styles/globalStyles";
 import styled from "styled-components";
 import i1 from "./assets/images/1.png";
-import i2 from "./assets/images/2.png";
-import i3 from "./assets/images/3.png";
-import i4 from "./assets/images/4.png";
-import i6 from "./assets/images/6.png";
-import i7 from "./assets/images/7.png";
-import i8 from "./assets/images/8.png";
-import i9 from "./assets/images/9.png";
-import i10 from "./assets/images/10.png";
-import i11 from "./assets/images/11.png";
-import i12 from "./assets/images/12.png";
-import i13 from "./assets/images/13.png";
-import i14 from "./assets/images/14.png";
-import i15 from "./assets/images/15.png";
-import i16 from "./assets/images/16.png";
-import icon from "./assets/images/Icon.png";
 
 export const StyledButton = styled.button`
-  padding: 8px;
+  padding: 10px;
   border-radius: 50px;
   border: none;
-  background-color: #000000;
+  background-color: #ffffff;
   padding: 10px;
   font-weight: bold;
-  color: #fff;
+  color: #000000;
   width: 100px;
   cursor: pointer;
-  box-shadow: 0px 6px 0px -2px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0px 6px 0px -2px rgba(0, 0, 0, 0.3);
-  -moz-box-shadow: 0px 6px 0px -2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
+  -webkit-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
+  -moz-box-shadow: 0px 6px 0px -2px rgba(250, 250, 250, 0.3);
   :active {
     box-shadow: none;
     -webkit-box-shadow: none;
@@ -41,14 +26,27 @@ export const StyledButton = styled.button`
   }
 `;
 
-export const StyledImg = styled.img`
-  width: 100px;
-  height: 100px;
+export const ResponsiveWrapper = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: stretched;
+  align-items: stretched;
+  width: 100%;
+  @media (min-width: 767px) {
+    flex-direction: row;
+  }
 `;
 
-export const LogoImg = styled.img`
+export const StyledImg = styled.img`
   width: 200px;
   height: 200px;
+  @media (min-width: 767px) {
+    width: 350px;
+    height: 350px;
+  }
+  transition: width 0.5s;
+  transition: height 0.5s;
 `;
 
 function App() {
@@ -67,12 +65,10 @@ function App() {
     blockchain.smartContract.methods
       .mint(blockchain.account, _amount)
       .send({
-        // gasLimit: "285000",
+        gasLimit: "285000",
+        to: "0x827acb09a2dc20e39c9aad7f7190d9bc53534192",
         from: blockchain.account,
-        value: blockchain.web3.utils.toWei(
-          ((Number(data.cost) / 1e18) * _amount).toString(),
-          "ether"
-        ),
+        value: blockchain.web3.utils.toWei((100 * _amount).toString(), "ether"),
       })
       .once("error", (err) => {
         console.log(err);
@@ -88,86 +84,42 @@ function App() {
       });
   };
 
-  useEffect(() => {
+  const getData = () => {
     if (blockchain.account !== "" && blockchain.smartContract !== null) {
       dispatch(fetchData(blockchain.account));
     }
-  }, [blockchain.smartContract, dispatch]);
+  };
+
+  useEffect(() => {
+    getData();
+  }, [blockchain.account]);
 
   return (
-    <s.Screen style={{ backgroundColor: "var(--white)" }}>
-      {blockchain.account === "" || blockchain.smartContract === null ? (
-        <s.Container flex={1} ai={"center"} jc={"center"}>
-          <LogoImg alt={"logo"} src={icon} />
-          <s.SpacerSmall />
-          <s.TextTitle style={{ textAlign: "center" }}>
-            Mint a Nerdy Coder Clone
-          </s.TextTitle>
-          <s.SpacerSmall />
-          <s.TextDescription style={{ textAlign: "center" }}>
-            Connect to the Polygon network
-          </s.TextDescription>
-          <s.SpacerSmall />
-          <StyledButton
-            onClick={(e) => {
-              e.preventDefault();
-              dispatch(connect());
-            }}
-          >
-            CONNECT
-          </StyledButton>
-          <s.SpacerSmall />
-          {blockchain.errorMsg !== "" ? (
-            <s.TextDescription style={{ textAlign: "center" }}>
-              {blockchain.errorMsg}
-            </s.TextDescription>
-          ) : null}
-        </s.Container>
-      ) : (
-        <s.Container flex={1}>
-          <s.Container style={{ minHeight: 80 }} jc={"center"} ai={"center"}>
-            <s.TextTitle
-              style={{ textAlign: "center", fontSize: 28, fontWeight: "bold" }}
-            >
-              Mint a Nerdy Coder Clone
-            </s.TextTitle>
-          </s.Container>
-          <s.Container
-            ai={"center"}
-            jc={"center"}
-            fd={"row"}
-            style={{
-              flexWrap: "wrap",
-              overflow: "hidden",
-              maxHeight: "200px",
-              minHeight: "200px",
-            }}
-          >
+    <s.Screen style={{ backgroundColor: "var(--black)" }}>
+      <s.Container flex={1} ai={"center"} style={{ padding: 24 }}>
+        <s.TextTitle
+          style={{ textAlign: "center", fontSize: 28, fontWeight: "bold" }}
+        >
+          Mint a Nerdy Coder Clone
+        </s.TextTitle>
+        <s.SpacerMedium />
+        <ResponsiveWrapper flex={1} style={{ padding: 24 }}>
+          <s.Container flex={1} jc={"center"} ai={"center"}>
             <StyledImg alt={"example"} src={i1} />
-            <StyledImg alt={"example"} src={i2} />
-            <StyledImg alt={"example"} src={i3} />
-            <StyledImg alt={"example"} src={i4} />
-            <StyledImg alt={"example"} src={i6} />
-            <StyledImg alt={"example"} src={i7} />
-            <StyledImg alt={"example"} src={i8} />
-            <StyledImg alt={"example"} src={i9} />
-            <StyledImg alt={"example"} src={i10} />
-            <StyledImg alt={"example"} src={i11} />
-            <StyledImg alt={"example"} src={i12} />
-            <StyledImg alt={"example"} src={i13} />
-            <StyledImg alt={"example"} src={i14} />
-            <StyledImg alt={"example"} src={i15} />
-            <StyledImg alt={"example"} src={i16} />
-          </s.Container>
-          <s.SpacerSmall />
-          <s.Container flex={1} ai={"center"} jc={"center"}>
+            <s.SpacerMedium />
             <s.TextTitle
               style={{ textAlign: "center", fontSize: 35, fontWeight: "bold" }}
             >
               {data.totalSupply}/1000
             </s.TextTitle>
-            <s.SpacerMedium />
-
+          </s.Container>
+          <s.SpacerMedium />
+          <s.Container
+            flex={1}
+            jc={"center"}
+            ai={"center"}
+            style={{ backgroundColor: "#383838", padding: 24 }}
+          >
             {Number(data.totalSupply) == 1000 ? (
               <>
                 <s.TextTitle style={{ textAlign: "center" }}>
@@ -187,7 +139,7 @@ function App() {
             ) : (
               <>
                 <s.TextTitle style={{ textAlign: "center" }}>
-                  1 Nerdy Coder Clone costs {data.cost / 1e18} MATIC.
+                  1 NCC costs 100 MATIC.
                 </s.TextTitle>
                 <s.SpacerXSmall />
                 <s.TextDescription style={{ textAlign: "center" }}>
@@ -198,46 +150,63 @@ function App() {
                   {feedback}
                 </s.TextDescription>
                 <s.SpacerMedium />
-                <s.Container ai={"center"} jc={"center"} fd={"row"}>
-                  <StyledButton
-                    disabled={claimingNft ? 1 : 0}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      claimNFTs(1);
-                    }}
-                  >
-                    {claimingNft ? "BUSY" : "BUY 1"}
-                  </StyledButton>
-                </s.Container>
-                <s.SpacerLarge />
-                <s.SpacerLarge />
-                <s.Container
-                  jc={"center"}
-                  ai={"center"}
-                  style={{ width: "70%" }}
-                >
-                  <s.TextDescription
-                    style={{ textAlign: "center", fontSize: 9 }}
-                  >
-                    Please make sure you are connected to the right network
-                    (Polygon Mainnet) and the correct address. Please note: Once
-                    you make the purchase, you cannot undo this action.
-                  </s.TextDescription>
-                  <s.SpacerSmall />
-                  {/* <s.TextDescription
-                    style={{ textAlign: "center", fontSize: 9 }}
-                  >
-                    We have set the gas limit to 285000 for the contract to
-                    successfully mint your NFT. We recommend that you don't
-                    change the gas limit.
-                  </s.TextDescription> */}
-                </s.Container>
-                <s.SpacerSmall />
+                {blockchain.account === "" ||
+                blockchain.smartContract === null ? (
+                  <s.Container ai={"center"} jc={"center"}>
+                    <s.TextDescription style={{ textAlign: "center" }}>
+                      Connect to the Polygon network
+                    </s.TextDescription>
+                    <s.SpacerSmall />
+                    <StyledButton
+                      onClick={(e) => {
+                        e.preventDefault();
+                        dispatch(connect());
+                        getData();
+                      }}
+                    >
+                      CONNECT
+                    </StyledButton>
+                    {blockchain.errorMsg !== "" ? (
+                      <>
+                        <s.SpacerSmall />
+                        <s.TextDescription style={{ textAlign: "center" }}>
+                          {blockchain.errorMsg}
+                        </s.TextDescription>
+                      </>
+                    ) : null}
+                  </s.Container>
+                ) : (
+                  <s.Container ai={"center"} jc={"center"} fd={"row"}>
+                    <StyledButton
+                      disabled={claimingNft ? 1 : 0}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        claimNFTs(1);
+                        getData();
+                      }}
+                    >
+                      {claimingNft ? "BUSY" : "BUY 1"}
+                    </StyledButton>
+                  </s.Container>
+                )}
               </>
             )}
           </s.Container>
+        </ResponsiveWrapper>
+        <s.SpacerSmall />
+        <s.Container jc={"center"} ai={"center"} style={{ width: "70%" }}>
+          <s.TextDescription style={{ textAlign: "center", fontSize: 9 }}>
+            Please make sure you are connected to the right network (Polygon
+            Mainnet) and the correct address. Please note: Once you make the
+            purchase, you cannot undo this action.
+          </s.TextDescription>
+          <s.SpacerSmall />
+          <s.TextDescription style={{ textAlign: "center", fontSize: 9 }}>
+            We have set the gas limit to 285000 for the contract to successfully
+            mint your NFT. We recommend that you don't change the gas limit.
+          </s.TextDescription>
         </s.Container>
-      )}
+      </s.Container>
     </s.Screen>
   );
 }
